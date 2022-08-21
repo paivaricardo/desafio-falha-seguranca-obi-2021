@@ -1,4 +1,4 @@
-# Desafio Falha de Segurança
+# Desafio Falha de Segurança (OBI 2021, Fase 3)
 
 Implementação de uma solução para o desafio "Falha de Segurança", da XXIV Olimpíada Brasileira de Informática, ano 2021, Fase 3, na forma aplicativo com interface em linha de comando, em Node.js (JavaScript).
 
