@@ -1,0 +1,16 @@
+{
+  "name": "desafiofalhaseguranca",
+  "version": "1.0.0",
+  "description": "",
+  "type": "module",
+  "main": "desafio.js",
+  "scripts": {
+    "start": "node desafioFalhaSeguranca.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "chalk": "^5.0.1"
+  }
+}
