@@ -1,5 +1,10 @@
-import * as readline from "readline";
-import chalk from "chalk";
+/* Este programa implementa a solução para o problema "Falha de Segurança" da XXIV Olimpíada Brasileira de Informática (2021), Fase 3, consistente na verificação do número de pares ordenados (A,B) distintos de usuários tal que o usuário A, usando sua senha, consegue acesso à conta do usuário B. No caso, há uma falha de segurança no sistema, na qual se a senha digitada contiver, como subcadeia contígua, a senha correta, o sistema permite, indevidamente, o acesso.\n'); */
+// Link para a página do problema: https://olimpiada.ic.unicamp.br/pratique/p2/2021/f3/falha/
+// Autor: Ricardo Paiva
+
+// Importação dos módulos JavaScript 'readline
+import * as readline from 'readline';
+import chalk from 'chalk';
 
 // Variáveis globais da aplicação
 // Constantes
@@ -10,18 +15,19 @@ const padraoSenha = /^[a-z][a-z0-9]{0,9}$/;
 let numeroEntradas = 0;
 let arraySenhasDigitadas = [];
 
-// Função para verificar se uma senha individual digitada corresponde ao padrão: apenas letras minúsculas sem acento e dígitos de 0 a 9, com mínimo de 1 caracter e máximo de 10 caracteres
+// Função para verificar se uma senha individual digitada corresponde ao padrão: apenas letras minúsculas sem acento e dígitos de 0 a 9, com mínimo de 1 caracter e máximo de 10 caracteres.
 function verificarPadraoSenha(senha, regexPadraoSenha = padraoSenha) {
   return regexPadraoSenha.test(senha);
 }
 
-// Função para verificar se todas as senhas do array correspondem ao padrão
+// Função para verificar se todas as senhas do array correspondem ao padrão.
 function verificarSenhasDigitadas(arraySenhas) {
   return arraySenhas.reduce((a, b) => {
     return a && verificarPadraoSenha(b);
   }, true);
 }
 
+// Função para verificar em quais linhas se localizam as senhas erradas. Retorna um array com os índices das senhas que não correspondem.
 function verificarLinhasSenhasForaPadrao(arraySenhas) {
   let arraySenhasForaPadrao = [];
 
@@ -34,7 +40,7 @@ function verificarLinhasSenhasForaPadrao(arraySenhas) {
   return arraySenhasForaPadrao;
 }
 
-//  Função principal, que retorna o número de incidentes de segurança, no qual um usuário, utilizando sua senha, consegue acesso à conta de outro usuário (ou seja, a senha digitada é uma substring de outra). Complexidade temporal do algoritmo: O(n^2)
+//  Função principal, que retorna o número de incidentes de segurança, no qual um usuário, utilizando sua senha, consegue acesso à conta de outro usuário (no caso, conseguirá acesso se senha correta (inídice "j"), for uma substring contígua da senha digitada (representada pelo índice "j")). A verificação de substrings contíguas é realizada por meio do método String.prototype.includes do JavaScript Complexidade temporal do algoritmo: O(n^2).
 export function retornaNumeroIncidentes(arraySenhas) {
   const n = arraySenhas.length;
   let numeroIncidentesSenhas = 0;
@@ -50,7 +56,7 @@ export function retornaNumeroIncidentes(arraySenhas) {
   return numeroIncidentesSenhas;
 }
 
-// Função geral que verifica o atendimento às restrições fornecidas nas instruções do problema. Se todas as condições forem atendidas, chama a função para calcular o número de incidentes de segurança (usuários que logram acesso a conta de outros utiliza)
+// Função geral que verifica o atendimento às restrições fornecidas nas instruções do problema. Se todas as condições forem atendidas, chama a função para calcular o número de incidentes de segurança (usuários que logram acesso a conta de outros utiliza).
 function verificarFalhasSeguranca(n, arraySenhas) {
   if (n == 1) {
     return "Não é possível fazer a verificação de possibilidades de incidente de segurança com apenas um usuário.";
@@ -71,6 +77,7 @@ function verificarFalhasSeguranca(n, arraySenhas) {
   }
 }
 
+// Função para inicilizar os processos de leitura de entrada a partir da tinha de comando, com utilização da biblioteca 'readline' do JavaScript.
 function createReadLineInterface() {
   const rl = readline.createInterface({
     input: process.stdin,
@@ -80,7 +87,7 @@ function createReadLineInterface() {
   return rl;
 }
 
-// Comandos para a execução do programa em linha de comando, solicitando as entradas do usuário:
+// Comandos para a execução do programa em linha de comando, solicitando uma entrada em única linhas. Função assíncrona que retorna uma promessa que será resolvida (devolvendo uma string) se o usuário digitar o input de acordo com a função de restrição. Se opção booleana for marcada, a promessa retornada devolverá uma booleana.
 async function promptSingleLine(
   comando,
   restricao,
@@ -106,6 +113,7 @@ async function promptSingleLine(
   });
 }
 
+// Função assíncrona que lê as entradas do usuário em múltiplas linhas, até o limite de linhas definido no parâmetro de entrada. Resolve uma promessa retornando um array contendo todas as linhas digitadas.
 async function promptMultiLine(comando, extensao) {
   const rl = createReadLineInterface();
   let inputArray = [];
@@ -124,11 +132,13 @@ async function promptMultiLine(comando, extensao) {
   });
 }
 
+// Função de restrição do número de entradas, de acordo com o enunciado do problema.
 const restringirNumeroEntradas = (input) =>
   Number.isInteger(Number(input)) &&
   Number(input) >= 1 &&
   Number(input) <= maxEntradas;
 
+// Função que comanda os prompts para digitação do número de entradas. Aceita apenas entradas válidas. Se a entrada for inválida, apresenta outro prompt por meio de recursão.
 async function promptEntradas() {
   const logPromptEntrada = chalk.green(
     "Digite o número de usuários do sistema (N):\n"
@@ -150,6 +160,7 @@ async function promptEntradas() {
   });
 }
 
+// Após a digitação das entradas, o programa solicita as senhas do usuário por meio de um promptMultiLine.
 async function promptSenhas() {
   const promptText = chalk.blue(
     (() => {
@@ -166,6 +177,7 @@ async function promptSenhas() {
   return await promptMultiLine(promptText, numeroEntradas);
 }
 
+// Função principal do aplicativo, que dá partida para a execução de todas as outras funções.
 async function app() {
   let continuarExecucao = true;
 
@@ -206,5 +218,5 @@ async function app() {
   }
 }
 
-// Rodar o app
+// Executa o programa.
 app();
