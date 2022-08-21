@@ -11,6 +11,6 @@ Para executar a aplicação, é necessário primeiramento realizar o clone do re
 
 É necessário possuir o Node instalado na sua máquina, que pode ser baixado por meio do site https://nodejs.org/en/download/. A versão utilizada para o projeto foi a 16.16.0.
 
-Após instalado o Node na máquina e clonado o repositório do projeto, faz-se necessário navegar até a pasta do projeto (por meio do comando `cd` e instalar as dependências da aplicação, com uso do comando `npm install`.
+Após instalado o Node na máquina e clonado o repositório do projeto, faz-se necessário navegar até a pasta raiz do projeto (por meio do comando `cd` e instalar as dependências da aplicação, com uso do comando `npm install` (com o diretório de trabalho na pasta raiz).
 
 Por fim, o projeto pode ser executado por meio do comando `npm start`.
