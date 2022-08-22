@@ -216,8 +216,6 @@ async function app() {
 
   while (continuarExecucao) {
     numeroEntradas = await promptEntradas();
-    console.log(numeroEntradas);
-
     arraySenhasDigitadas = await promptSenhas();
 
     const saidaPrograma = chalk.yellow(
