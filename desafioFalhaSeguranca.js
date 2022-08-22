@@ -2,9 +2,9 @@
 // Link para a página do problema: https://olimpiada.ic.unicamp.br/pratique/p2/2021/f3/falha/
 // Autor: Ricardo Paiva
 
-// Importação dos módulos JavaScript 'readline
-import * as readline from 'readline';
-import chalk from 'chalk';
+// Importação dos módulos JavaScript 'readline', para leitura de entradas via linha de comando, e 'chalk', para mostrar textos de comando coloridos ao usuário.
+import * as readline from "readline";
+import chalk from "chalk";
 
 // Variáveis globais da aplicação
 // Constantes
@@ -92,7 +92,7 @@ async function promptSingleLine(
   comando,
   restricao,
   respostaBooleana = false,
-  callbackRespostaBooleana = resposta => true
+  callbackRespostaBooleana = (resposta) => true
 ) {
   const rl = createReadLineInterface();
 
@@ -138,25 +138,34 @@ const restringirNumeroEntradas = (input) =>
   Number(input) >= 1 &&
   Number(input) <= maxEntradas;
 
-// Função que comanda os prompts para digitação do número de entradas. Aceita apenas entradas válidas. Se a entrada for inválida, apresenta outro prompt por meio de recursão.
+// Função que comanda os prompts para digitação do número de entradas. Aceita apenas entradas válidas. A promessa somente resolverá se a entrada digitada for válida. Se não, será mostrado ao usuário outro prompt.
 async function promptEntradas() {
+  let entradaCorreta = false;
+  let numeroEntradas = 0;
+
   const logPromptEntrada = chalk.green(
     "Digite o número de usuários do sistema (N):\n"
   );
 
-  return await new Promise(async (resolve) => {
+  while (!entradaCorreta) {
     try {
-      let numeroEntradas = Number(
+      numeroEntradas = Number(
         await promptSingleLine(logPromptEntrada, restringirNumeroEntradas)
       );
-      resolve(numeroEntradas);
+
+      if (numeroEntradas > 0) {
+        entradaCorreta = true;
+      }
     } catch (error) {
       const logError = chalk.red(
         `Digite uma entrada numérica válida, correspondente a um número inteiro menor que ${maxEntradas} e maior que zero.`
       );
       console.log(logError);
-      promptEntradas();
     }
+  }
+
+  return await new Promise(async (resolve) => {
+    resolve(numeroEntradas);
   });
 }
 
@@ -177,14 +186,26 @@ async function promptSenhas() {
   return await promptMultiLine(promptText, numeroEntradas);
 }
 
+// Função que reinicia as variáveis globais da aplicação.
+function reiniciarVariaveisGlobais() {
+  numeroEntradas = 0;
+  arraySenhasDigitadas = [];
+}
+
 // Função principal do aplicativo, que dá partida para a execução de todas as outras funções.
 async function app() {
   let continuarExecucao = true;
 
-  const textoBoasVindasDivider = chalk.blueBright('-'.repeat(60));
-  const textoBoasVindasL1 = chalk.blueBright(`FALHA DE SEGURANÇA - OBI 2021 - Nível 2 - FASE 3`);
-  const textoBoasVindasL2 = chalk.blueBright('Este programa implementa a solução para o problema "Falha de Segurança" da XXIV Olimpíada Brasileira de Informática (2021), Fase 3, consistente na verificação do número de pares ordenados (A,B) distintos de usuários tal que o usuário A, usando sua senha, consegue acesso à conta do usuário B. No caso, há uma falha de segurança no sistema, na qual se a senha digitada contiver, como subcadeia contígua, a senha correta, o sistema permite, indevidamente, o acesso.\n');
-  const textoBoasVindasL3 = chalk.blueBright('Link para a página do problema: https://olimpiada.ic.unicamp.br/pratique/p2/2021/f3/falha/');
+  const textoBoasVindasDivider = chalk.blueBright("-".repeat(60));
+  const textoBoasVindasL1 = chalk.blueBright(
+    `FALHA DE SEGURANÇA - OBI 2021 - Nível 2 - FASE 3`
+  );
+  const textoBoasVindasL2 = chalk.blueBright(
+    'Este programa implementa a solução para o problema "Falha de Segurança" da XXIV Olimpíada Brasileira de Informática (2021), Fase 3, consistente na verificação do número de pares ordenados (A,B) distintos de usuários tal que o usuário A, usando sua senha, consegue acesso à conta do usuário B. No caso, há uma falha de segurança no sistema, na qual se a senha digitada contiver, como subcadeia contígua, a senha correta, o sistema permite, indevidamente, o acesso.\n'
+  );
+  const textoBoasVindasL3 = chalk.blueBright(
+    "Link para a página do problema: https://olimpiada.ic.unicamp.br/pratique/p2/2021/f3/falha/"
+  );
 
   console.log(textoBoasVindasDivider);
   console.log(textoBoasVindasL1);
@@ -193,9 +214,10 @@ async function app() {
   console.log(textoBoasVindasL3);
   console.log(textoBoasVindasDivider);
 
-
   while (continuarExecucao) {
     numeroEntradas = await promptEntradas();
+    console.log(numeroEntradas);
+
     arraySenhasDigitadas = await promptSenhas();
 
     const saidaPrograma = chalk.yellow(
@@ -204,15 +226,17 @@ async function app() {
 
     console.log(saidaPrograma);
 
+    reiniciarVariaveisGlobais();
+
     let continuarExecucaoResposta = await promptSingleLine(
       'Deseja fazer outra verificação? (digite S para "sim" ou qualquer outra tecla para "não"): ',
       () => true,
       true,
-      resposta => /^s$/i.test(resposta)
+      (resposta) => /^s$/i.test(resposta)
     );
 
     if (!continuarExecucaoResposta) {
-      console.log('Programa encerrado.');
+      console.log("Programa encerrado.");
       continuarExecucao = false;
     }
   }
